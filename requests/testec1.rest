@@ -1,0 +1,9 @@
+POST http://localhost:8080/candidate/
+
+{
+    "name": "test",
+    "username": "test",
+    "email": "teste@teste.com",
+    "password": "235dfsfadfad",
+    "description": "test"
+}
