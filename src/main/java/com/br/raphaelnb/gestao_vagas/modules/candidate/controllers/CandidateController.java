@@ -1,6 +1,8 @@
 package com.br.raphaelnb.gestao_vagas.modules.candidate.controllers;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.br.raphaelnb.gestao_vagas.exceptions.UserFoundException;
 import com.br.raphaelnb.gestao_vagas.modules.candidate.CandidateEntity;
 import com.br.raphaelnb.gestao_vagas.modules.candidate.CandidateRepository;
+import com.br.raphaelnb.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 
 import jakarta.validation.Valid;
 
@@ -17,19 +20,18 @@ import jakarta.validation.Valid;
 public class CandidateController {
 
     @Autowired
-    private CandidateRepository candidateRepository;
+    private CreateCandidateUseCase createCandidateUseCase;
 
     @PostMapping("/")
-    public CandidateEntity create(@Valid @RequestBody CandidateEntity candidate) {
-        System.out.println("email do candidato: " + candidate.getEmail());
-        this.candidateRepository
-                .findByUsernameOrEmail(candidate.getUsername(), candidate.getEmail())
-                .ifPresent((user) -> {
-                    throw new UserFoundException();
-                });
-        ;
+    public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidate) {
+        try {
+            System.out.println("email do candidato: " + candidate.getEmail());
+            var result = this.createCandidateUseCase.execute(candidate);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception error) {
+            return ResponseEntity.badRequest().body(error.getMessage());
+        }
 
-        return candidateRepository.save(candidate);
     }
 
 }
