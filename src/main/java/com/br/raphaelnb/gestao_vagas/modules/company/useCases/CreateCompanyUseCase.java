@@ -8,7 +8,7 @@ import com.br.raphaelnb.gestao_vagas.modules.company.entities.CompanyEntity;
 import com.br.raphaelnb.gestao_vagas.modules.company.repositories.CompanyRepository;
 
 @Service
-public class createCompanyUseCase {
+public class CreateCompanyUseCase {
 
     @Autowired
     private CompanyRepository companyRepository;
